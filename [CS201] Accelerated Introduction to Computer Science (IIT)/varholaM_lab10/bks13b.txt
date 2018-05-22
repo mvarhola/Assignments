@@ -1,0 +1,6 @@
+Code Complete (2nd edition), Steve McConnell, 0735619670, Microsoft Press, Software Development,  $33.33, 420
+Clean Code: A Handbook of Agile Software Craftsmanship, Robert C. Martin, 978-0132350884, Prentice Hall, Software Development, $40.23, 203
+The Pragmatic Programmer, Andrew Hunt and David Thomas, 978-0201616224, Addison-Wesley Professional, Computers & Technology, $55.20, 3
+Don't Make Me Think: A Common Sense Approach to Web Usability, Steve Krug, 0321344758, New Riders, Web Development and Design, $25.77, 312
+The Revolution: A Manifesto, Ron Paul, 978-0446537520, Grand Central Publishing, Liberitarian Propoganda, $3.50, -1
+Fifty Shades of Grey (INCORRECT ISBN), E L James, 0345803486, Vintage Books, Hardcore Romance, $9.34, 38

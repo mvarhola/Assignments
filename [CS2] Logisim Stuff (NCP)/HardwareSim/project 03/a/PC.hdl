@@ -1,0 +1,50 @@
+// This file is part of the materials accompanying the book 
+// "The Elements of Computing Systems" by Nisan and Schocken, 
+// MIT Press. Book site: www.idc.ac.il/tecs
+// File name: projects/03/a/PC.hdl
+
+/**
+ * A 16-bit counter with load and reset control bits.
+ * if      (reset[t]==1) out[t+1] = 0
+ * else if (load[t]==1)  out[t+1] = in[t]
+ * else if (inc[t]==1)   out[t+1] = out[t] + 1  (integer addition)
+ * else                  out[t+1] = out[t]
+ */
+
+CHIP PC {
+    IN in[16],load,inc,reset;
+    OUT out[16];
+	
+    PARTS:
+    // Put your code here.
+
+	
+//Mux8Way16 3 Lines of Code method//
+
+	Register(in = RegisterIn, load = true, out = jimmies, out = out);
+	Inc16(in = jimmies, out = moarjimmies);
+	
+	Mux8Way16( b = false, c = moarjimmies, e = in, g = in, sel[0] = reset, sel[1] = inc, sel[2] = load, out = RegisterIn);
+	
+	
+////////OLD CODE////////
+	
+//	Mux16(a = rustledjimmies, b = in, sel = load, out = baka);
+
+//	Not16(in = baka, out = notbaka);
+//	Add16(a = baka, b = notbaka, out = cirno);
+
+//	Mux16(a = baka, b = cirno, sel = reset, out = sanae);
+//	Not16(in = sanae, out = notsanae);
+	
+//	Mux16(a = sanae, b = notsanae, sel = reset, out = muxedtouhou);
+	
+//	Register(in = muxedtouhou, load = true, out = jimmies, out = out);
+	
+//	Inc16(in = jimmies, out = multijimmies);
+	
+//	Mux16(a = jimmies, b = multijimmies, sel = inc, out = rustledjimmies);
+	
+
+}
+

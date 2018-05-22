@@ -1,0 +1,79 @@
+//A Register
+	ARegister(in = AregIN, load = LoadAreg, out = AregOUT, out[0..14] = addressM);
+	
+//D Register
+	DRegister(in = ALUout, load = LoadDreg, out = DregOUT);
+	
+//Decoder
+	//[15] = i
+	//[14..13] = x
+	//[12] = a
+	//[11..6] = c
+	//[5..3] = d
+	//[2..0] = j
+	
+//Not instruction[15]
+	Not(in = instruction[15], out = notinstruction15);	
+
+//Allow loading of value into PC
+	// Check if reset is off
+	Not(in=reset, out = notreset);
+	//check if instruction[15] is 1
+	And(a = instruction[15], b = notreset, out = derp);
+	//Load PC 
+	Or(a=notinstruction15, b=derp, out=loadPC);
+	
+//d bit decoder
+	And(a = instruction[15], b = instruction[5], out = snoop);
+	Not(in = instruction[15], out = dogg);
+	Or(a = snoop, b = dogg, out = LoadAreg);
+	
+	And(a = instruction[15], b = instruction[4], out = LoadDreg);
+	
+	And(a = instruction[15], b = instruction[3], out = writeM);
+	
+//Comparer of JMP instructions
+	Or(a = ng, b = zr, out = or1);
+	Not(in = or1, out = notor1);
+	And(a = notor1, b = instruction[0], out = JGT);
+	
+	And(a = zr, b = instruction[1], out = JEQ);
+	
+	And(a = instruction[2], b = ng, out = JLT);
+	
+	Or(a = JLT, b = JEQ, out = jmp1);
+	Or(a = jmp1, b = JGT, out = slamjam);
+	
+	Or(a = jmp1, b = slamjam, out = loadout, out=jump);
+	Not(in = loadout, out = notloadout);
+	
+	Or(a=notinstruction15, b=notloadout, out=pcincrement);
+	
+//Jump
+	Inc16(in=pizza, out=VALincrement);
+
+	Mux16(a=pizza, b=AregOUT, sel = JLT, out = cirno);
+	Mux16(a=cirno, b=AregOUT, sel = JEQ, out = baka);
+	Mux16(a=baka, b=AregOUT, sel = JGT, out = SHMUPS);
+
+	Mux16(a=VALincrement, b = SHMUPS, sel=loadout, out = idolmaster);
+	
+//ALU
+	ALU(x = DregOUT, y = AM,
+	zx= instruction[11], 
+	nx= instruction[10],
+	zy= instruction[9],
+	ny= instruction[8],
+	f = instruction[7], 
+	no = instruction[6],
+	zr= zr,
+	ng= ng,
+	out = outM, out = ALUout);
+	
+//PC
+	PC(in = idolmaster , load = loadPC, inc = pcincrement, reset = reset, out = pizza, out[0..14] = pc);
+	
+//Store inputs
+	Mux16(a = ALUout, b = instruction, sel = notinstruction15, out = AregIN);
+	Mux16(a = AregOUT, b = inM, sel = instruction[12], out = AM);
+	

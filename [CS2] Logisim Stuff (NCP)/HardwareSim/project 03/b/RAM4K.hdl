@@ -1,0 +1,54 @@
+// This file is part of the materials accompanying the book 
+// "The Elements of Computing Systems" by Nisan and Schocken, 
+// MIT Press. Book site: www.idc.ac.il/tecs
+// File name: projects/03/b/RAM4K.hdl
+
+/**
+ * Memory of 4K registers, each 16 bit-wide. Out hold the value
+ * stored at the memory location specified by address. If load=1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out after the next time step.)
+ */
+
+CHIP RAM4K {
+    IN in[16], load, address[12];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here.
+	
+	DMux8Way(
+		in =  load, sel = address[0..2],
+		a = dma,
+		b = dmb,
+		c = dmc, 
+		d = dmd,
+		e = dme,
+		f = dmf,
+		g = dmg,
+		h = dmh
+		);
+		
+	RAM512(in = in, load = dma, address = address[3..11], out = rama);
+	RAM512(in = in, load = dmb, address = address[3..11], out = ramb);
+	RAM512(in = in, load = dmc, address = address[3..11], out = ramc);
+	RAM512(in = in, load = dmd, address = address[3..11], out = ramd);
+	RAM512(in = in, load = dme, address = address[3..11], out = rame);
+	RAM512(in = in, load = dmf, address = address[3..11], out = ramf);
+	RAM512(in = in, load = dmg, address = address[3..11], out = ramg);
+	RAM512(in = in, load = dmh, address = address[3..11], out = ramh);
+	
+	Mux8Way16(
+	a = rama,
+	b = ramb,
+	c = ramc,
+	d = ramd,
+	e = rame,
+	f = ramf,
+	g = ramg,
+	h = ramh,
+	sel = address[0..2],
+	out = out
+	);
+	
+}

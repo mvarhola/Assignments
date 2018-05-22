@@ -1,0 +1,79 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current program
+                         // (reset == 1) or continue executing the current
+                         // program (reset == 0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write into M? 
+        addressM[15],    // RAM address (of M)
+        pc[15];          // ROM address (of next instruction)
+
+     PARTS:
+    // Put your code here.
+	
+	
+//1|00|1|000000|111|000
+//i|xx|a|cccccc|ddd|jjj
+
+//[15] = i
+//[14..13] = x
+//[12] = a
+//[11..6] = c
+//[5..3] = d
+//[2..0] = j
+
+//A Register
+	ARegister(in=ARegIn, load = instruction[5], out = ARegOut, out[0..14]=addressM);
+	
+//D Register
+	DRegister(in=ALUOut, load = instruction[4], out = DRegOut);
+	
+//Comparer
+	Or(a = ng, b = zr, out = or1);
+	Not(in = or1, out = notor1);
+	And(a = notor1, b = instruction[2], out = JUMP1);
+	
+	And(a = zr, b = instruction[1], out = JUMP2);
+	
+	And(a = instruction[0], b = ng, out = JUMP3);
+	
+	Or(a = JUMP1, b = JUMP2, out = jmp1);
+	Or(a = JUMP2, b = JUMP3, out = jmp2);
+	
+	Or(a = jmp1, b = jmp2, out = loadout);
+	Not(in = loadout, out = notloadout);
+	
+//ALU
+	ALU(x = DRegOut, y = AM,
+	zx= instruction[11], 
+	nx= instruction[10],
+	zy= instruction[9],
+	ny= instruction[8],
+	f = instruction[7], 
+	no = instruction[6],
+	zr= zr,
+	ng= ng,
+	out = out, out = ALUOut);
+	
+//PC
+	PC(in = ARegOut, load = loadout, inc = notloadout, reset = reset, out[0..14] = pc);
+
+//Other Stuff
+	Mux16(a = ALUOut, b = instruction, sel = instruction[15], out = ARegIn);
+	Mux16(a = ARegOut, b = inM, sel = instruction[12], out = AM);
+	
+	Not(in = instruction[3], out = writeM);
+//	Not(in= almost, out = writeM);
+	
+	
+	
+	
+}

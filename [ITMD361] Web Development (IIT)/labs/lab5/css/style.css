@@ -1,0 +1,64 @@
+body {
+  /*Background pattern*/
+  background-color: #fff; 
+  background-image: 
+  linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+  linear-gradient(#eee .1em, transparent .1em);
+  background-size: 100% 1.2em;
+
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: center;
+}
+
+section{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+table {
+    margin: 0 auto;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+th {
+  text-align:  center;
+}
+table .header {
+   border: 0;
+}
+
+table td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+table tr:not(.header):nth-child(odd) {
+    background-color: #e2e2e2;
+}
+
+table tr:not(.header):nth-child(even) {
+    background-color: #ffffff;
+}
+
+table tr:first-child
+{
+    border: hidden;
+    border-bottom: 1px black;
+}
+
+table tr:first-child td
+{
+    border: none;
+}
+
+table tr td:first-child{
+  font-weight: bold;
+}

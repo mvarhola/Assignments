@@ -1,0 +1,54 @@
+int foo (int int1)
+      		{   if (int1 == 1)
+                     		return 1;
+                	 else 
+			return int1 *  foo(int1-1);	}
+
+			
+foo(5){
+	if (5==1){FALSE
+		return 1;
+	}
+	else{
+		return 5*foo(5-1)
+	}
+}
+
+foo(4){
+	if (4==1){FALSE
+		return 1;
+	}
+	else{
+		return 4*foo(4-1)
+	}
+}
+
+foo(3){
+	if (3==1){FALSE
+		return 1;
+	}
+	else{
+		return 3*foo(3-1)
+	}
+}
+
+foo(2){
+	if (2==1){FALSE
+		return 1;
+	}
+	else{
+		return 2*foo(2-1)
+	}
+}
+
+foo(1){
+	if (1==1){ TRUE
+		return 1;
+	}
+	else{
+		return 1*foo(2-1)
+	}
+}
+
+5*foo(4)*foo(3)*foo(2)*foo(1)
+5*4*3*2*1

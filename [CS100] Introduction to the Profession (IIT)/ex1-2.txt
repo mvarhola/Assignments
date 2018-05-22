@@ -1,0 +1,7 @@
+isPalindrome(word){
+	if (word.reverse == word){
+		return true
+	}else{
+		return false
+	}
+}

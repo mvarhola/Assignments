@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation = "vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Input Classes"
+        android:textSize="30dp"
+        android:gravity="center_horizontal"
+        />
+
+    <SearchView
+        android:id="@+id/searchview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search class"/>
+
+    <ListView
+        android:id="@+id/classlistfrag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</android.widget.LinearLayout>

@@ -1,0 +1,87 @@
+ADD
+1	cpu->reg[dst] = cpu->reg[src1]+imm5;
+0	cpu->reg[dst] = cpu->reg[src1]+cpu->reg[src2];
+	set_cc(cpu,cpu->reg[dst]);
+
+AND
+1	cpu->reg[dst] = cpu->reg[src1]&cpu->reg[src2];
+0	cpu->reg[dst] = cpu->reg[src1]&imm5;
+	set_cc(cpu,cpu->reg[dst]);
+
+void INST_LD(CPU *cpu){
+	cpu->reg[dst] = cpu->mem[cpu->pc+pcoffset];
+	set_cc(cpu,cpu->reg[dst]);
+}
+
+void INST_LDI(CPU *cpu){
+	cpu->reg[dst] = cpu->mem[cpu->mem[cpu->pc+pcoffset]];
+	set_cc(cpu,cpu->reg[dst]);
+}
+
+void INST_LDR(CPU *cpu){
+	cpu->reg[dst] = cpu->mem[cpu->reg[base]+offset];
+	set_cc(cpu,cpu->reg[dst]);
+}
+
+void INST_LEA(CPU *cpu){
+	cpu->reg[dst] = cpu->pc+pcoffset;
+	set_cc(cpu,cpu->reg[dst]);
+}
+
+void INST_BR(CPU *cpu){
+	if(mask&get_cc(cpu)!=0){
+		cpu->pc += pcoffset;
+		printf("BR!\n");
+	}
+}
+
+void INST_JMP(CPU *cpu){
+	cpu->pc = cpu->reg[base];
+}
+
+void INST_JSR(CPU *cpu){
+	if(type==1){
+		cpu->pc = cpu->pc+pcoffset;		
+		printf("JSR\n");
+	}else{
+		cpu->pc = cpu->reg[base];		
+		printf("JSRR\n");
+	}
+}
+
+void INST_NOT(CPU *cpu){
+	cpu->reg[dst] = ~cpu->reg[src];
+	set_cc(cpu,cpu->reg[dst]);
+}
+
+void INST_ST(CPU *cpu){
+	cpu->mem[cpu->pc+pcoffset] = cpu->reg[src];
+}
+
+void INST_STI(CPU *cpu){
+	cpu->mem[cpu->mem[pcoffset+cpu->pc]] = cpu->reg[src];
+}
+
+void INST_STR(CPU *cpu){
+	cpu->mem[base+offset] = cpu->reg[dst];
+}
+
+void INST_TRAP(CPU *cpu){
+	Word tmp_addr;
+	switch(trp_vector){
+		case 32:
+				cpu->reg[0] = prompt_char();
+		case 33:printf("%c",cpu->reg[0]);
+		case 34:tmp_addr = cpu->reg[0];
+				while(cpu->mem[tmp_addr]!=0){
+					printf("%c",cpu->mem[tmp_addr]);
+					tmp_addr++;
+				}
+		case 35:cpu->reg[0] = prompt_char();
+				printf("char read: '%c'\n",cpu->reg[0]);
+	
+		case 37:cpu->running = 0;
+				set_cc(cpu,1);
+		default:set_cc(cpu,cpu->reg[7]);
+	}
+}

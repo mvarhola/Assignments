@@ -1,0 +1,10 @@
+ntf OPTION
+
+DESCRIPTION
+       Print ARGPRINTF(1) ntf OPTION
+
+DESCRIPTION
+       Print ARG_a_t [_a_r_g_u_m_e_n_t_s _._
+PRINTF(1)_a_t [_a_r_g_u_m_e_n_t_s _._
+PRINTF(1)
+PRINTF(1)_a_t [_a_r_g_u_m_e_n_t_s _._

@@ -1,0 +1,80 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current program
+                         // (reset == 1) or continue executing the current
+                         // program (reset == 0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write into M? 
+        addressM[15],    // RAM address (of M)
+        pc[15];          // ROM address (of next instruction)
+
+     PARTS:
+    // Put your code here.
+	
+//0|00|0|001111|100|111
+//1|00|1|000000|111|000
+//i|xx|a|cccccc|ddd|jjj
+	
+//Will load register if its an A instruction by having it not the 15th bit of the instruction (i)
+	Not(in = instruction[15], out = notinstruction15);
+//A Register
+	ARegister(in=ARegIn, load = LoadAreg, out = ARegOut, out[0..14]=addressM);
+	
+//D Register
+	DRegister(in=ALUOut, load = LoadDreg, out = DRegOut);
+
+//D bit decoder (Chooses where to write value)
+	And(a = instruction[15], b = instruction[5], out = snoop);
+	Not(in = instruction[15], out = dogg);
+	Or(a = snoop, b = dogg, out = LoadAreg);
+	
+	And(a = instruction[15], b = instruction[4], out = LoadDreg);
+	
+	And(a = instruction[15], b = instruction[3], out = writeM);
+	
+//Jump Conditions (If a jump is occuring, load PC)
+	Or(a = ng, b = zr, out = or1);
+	Not(in = or1, out = notor1);
+	And(a = notor1, b = instruction[0], out = JGT);
+	
+	And(a = zr, b = instruction[1], out = JEQ);
+	
+	And(a = instruction[2], b = ng, out = JLT);
+	
+	Or(a = JGT, b = JEQ, out = jmp1);
+	Or(a = JEQ, b = JLT, out = jmp2);
+	
+	Or(a = jmp1, b = jmp2, out = loadout);
+
+//Will only load PC if there is a JUMP and the instruction is a C instruction
+	And(a = loadout, b = instruction[15], out = ihavenoidea);
+	
+
+//ALU
+	ALU(x = DRegOut, y = AM,
+	zx= instruction[11], 
+	nx= instruction[10],
+	zy= instruction[9],
+	ny= instruction[8],
+	f = instruction[7], 
+	no = instruction[6],
+	zr= zr,
+	ng= ng,
+	out = outM, out = ALUOut);
+	
+//PC
+	PC(in = ARegOut, load = ihavenoidea, inc = true, reset = reset, out[0..14] = pc);
+
+//Other Stuff
+	Mux16(a = ALUOut, b = instruction, sel = notinstruction15, out = ARegIn);
+	Mux16(a = ARegOut, b = inM, sel = instruction[12], out = AM);
+	
+}

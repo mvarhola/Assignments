@@ -1,0 +1,163 @@
+// This file is part of the materials accompanying the book 
+// "The Elements of Computing Systems" by Nisan and Schocken, 
+// MIT Press. Book site: www.idc.ac.il/tecs
+// File name: projects/02/ALU.hdl
+
+/**
+ * The ALU. Computes one of the following functions:
+ * x+y, x-y, y–x, 0, 1, -1, x, y, -x, -y, !x, !y,
+ * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs, 
+ * according to 6 input bits denoted zx,nx,zy,ny,f,no.
+ * The bit-combinations that yield each function are 
+ * documented in the book. In addition, the ALU 
+ * computes two 1-bit outputs: if the ALU output
+ * is 0, zr is set to 1; otherwise zr is set to 0;
+ * If out<0, ng is set to 1; otherwise ng is set to 0.
+ */
+
+// Implementation: the ALU manipulates the x and y
+// inputs and then operates on the resulting values, 
+// as follows:
+// if (zx==1) set x = 0        // 16-bit constant
+// if (nx==1) set x = ~x       // bitwise "not"
+// if (zy==1) set y = 0        // 16-bit constant
+// if (ny==1) set y = ~y       // bitwise "not"
+// if (f==1)  set out = x + y  // integer 2's complement addition
+// if (f==0)  set out = x & y  // bitwise "and"
+// if (no==1) set out = ~out   // bitwise "not"
+// if (out==0) set zr = 1
+// if (out<0) set ng = 1
+
+  
+CHIP ALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute  out = x + y (if 1) or out = x & y (if 0)
+        no; // negate the out output?
+
+    OUT 
+        out[16], // 16-bit output
+        zr, // 1 if (out==0), 0 otherwise
+        ng; // 1 if (out<0),  0 otherwise
+
+    PARTS:
+    // Put your code here.
+	
+	Not16(in = x, out = notx);
+	Not16(in = y, out = noty);
+	
+	Add16(a = x, b = notx, out = cirno);
+	Add16(a = y, b = noty, out = sanae);
+	
+	Mux16(a = x, b = cirno, sel = zx, out = derp);
+	Mux16(a = y, b = sanae, sel = zy, out = hurp);
+	
+	Not16(in = derp, out = notderp);
+	Not16(in = hurp, out = nothurp);
+	
+	Mux16(a = derp, b = notderp, sel = zx, out = girugamesh);
+	Mux16(a = hurp, b = nothurp, sel = zy, out = weeaboo);
+	
+	Not16(in = girugamesh, out = notgirugamesh);
+	Not16(in = weeaboo, out = notweeaboo);
+	
+	Mux16(a = girugamesh, b = notgirugamesh, sel = nx, out = jibunwo);
+	Mux16(a = weeaboo, b = notweeaboo, sel = ny, out = vidyagaemz);
+	
+	And16(a = jibunwo, b = vidyagaemz, out = animu);
+	Add16(a = jibunwo, b = vidyagaemz, out = baka);
+	
+	Mux16(a = animu, b = baka, sel = f, out = thestrongest);
+	
+	Not16(in = thestrongest, out = purepwnage);
+	
+	Mux16(a = thestrongest, b = purepwnage, sel = no, out = out, out[15] = ng, out = preout1);
+	
+	Or16way(in = preout1, out = overneinthousand);
+	
+	Not(in = overneinthousand, out = zr);
+	
+	
+	
+	
+	
+	
+	
+	
+//	Not16(in = x, out = notx);
+//	Not16(in = y, out = noty);
+	
+//	Mux16(a = x, b = x, sel = nx, out = xmux);
+//	Mux16(a = y, b = y, sel = ny, out = ymux);
+	
+//	Add16(a = x, b = notx, out = wub);
+//	Add16(a = y, b = noty, out = dub);
+	
+//	Not16(in = wub, out = cirno);
+//	Not16(in = dub, out = ronaldo);
+	
+//	Mux16(a = xmux, b = cirno, sel = zx, out = girugamesh);
+//	Mux16(a = ymux, b = ronaldo, sel = zy, out = battletoads);
+	
+//	Add16(a = girugamesh, b = battletoads, out = checkem);
+//	And16(a = girugamesh, b = battletoads, out = dubs);
+	
+//	Mux16(a = dubs, b = checkem, sel = f, out = nedm);
+	
+//	Not16(in = nedm, out = baka);
+	
+//	Inc16(in = nedm, out = jibunwo);
+	
+//	Mux16(a = jibunwo, b = nedm, sel = no, out[15] = ng, out[0] = zr, out = out);
+	
+	
+	
+
+//	FAILED ATTEMPT #1	
+	
+//	Not16(in = x, out = notx);
+//	Not16(in = y, out = noty);
+	
+//	Add16(a = x, b = notx, out = x0);
+//	Add16(a = y, b = noty, out = y0);
+	
+//	Not16(in = x0, out = xo);
+//	Not16(in = y0, out = yo);
+	
+//	Mux16(a = x, b = notx, sel = nx, out = lel);
+//	Mux16(a = lel, b = xo, sel = zx, out = lol);
+	
+//	Mux16(a = y, b = noty, sel = ny, out = lal);
+//	Mux16(a = lal, b = yo, sel = zy, out = lyl);
+	
+//	Add16(a = lol, b = lyl, out = cirno);
+//	And16(a = lol, b = lyl, out = sanae);
+
+//	Mux16(a = sanae, b = cirno, sel = f, out = derp);
+
+//	Not16(in = derp, out = notderp);
+//	Mux16(a = derp, b = notderp, sel = no, out = krump);
+	
+//	Not16(in = krump, out = thestrongest);
+//	Add16(a = true, b = thestrongest, out = out, out[15] = ng, out[0] = zr);
+
+
+
+
+//	Or16way(in = krump , out = baka);
+//	Not(in = baka, out = zr);
+	
+	
+	
+//	And16(a=krump, b[15]=true, b[0..14]=false, out=ng16);
+//   Or16way(in=ng16, out=ng);
+	
+//	Or8Way( in=out[0..7], out = baka1);
+//	Or8Way( in=out[8..15], out = baka2);
+//	Or( a = baka1, b = baka2, out = zr );
+	
+}
